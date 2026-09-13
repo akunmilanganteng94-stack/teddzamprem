@@ -92,6 +92,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
         setLoadingUsers(false);
       }
     );
+
     return () => unsub();
   }, []);
 
@@ -120,7 +121,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
         </p>
         <button
           onClick={onBackToStore}
-          className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold"
+          className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold cursor-pointer"
         >
           Kembali ke Toko
         </button>
@@ -176,6 +177,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
         storeName: tempSettings.storeName,
         storeOpen: tempSettings.storeOpen,
         danaNumber: tempSettings.danaNumber.trim(),
+        danaName: tempSettings.danaName?.trim() || 'TEDDY TRI PRATAMA',
         whatsapp: tempSettings.whatsapp.trim(),
         qrisUrl: tempSettings.qrisUrl.trim(),
         minDeposit: Number(tempSettings.minDeposit) || 1000,
@@ -597,7 +599,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
               <Users className="w-5 h-5 text-cyan-400" />
               <span>Daftar User & Manajemen Saldo</span>
             </h3>
-
             {/* Search */}
             <div className="relative w-full sm:w-72">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -643,7 +644,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
                         {isSuspended ? 'SUSPENDED' : 'AKTIF'}
                       </span>
                     </div>
-
                     <div className="mt-1 space-y-0.5 text-slate-400">
                       <div>Email: <span className="text-slate-200">{u.email}</span></div>
                       <div className="font-mono text-[11px]">UID: {u.uid}</div>
@@ -741,7 +741,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
                         User: {ord.userName || ord.userEmail} ({ord.userEmail}) • {formatDate(ord.createdAt)}
                       </span>
                     </div>
-
                     <div className="text-right">
                       <span className="text-sm font-extrabold text-cyan-300">
                         {formatRupiah(ord.total)}
@@ -804,7 +803,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
                 <button
                   type="button"
                   onClick={() => setTempSettings({ ...tempSettings, storeOpen: true })}
-                  className={`flex-1 py-2 rounded-xl font-bold border transition-all ${
+                  className={`flex-1 py-2 rounded-xl font-bold border transition-all cursor-pointer ${
                     tempSettings.storeOpen
                       ? 'bg-emerald-600 text-white border-emerald-400 shadow-md'
                       : 'bg-slate-900 text-slate-400 border-blue-500/20'
@@ -815,7 +814,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
                 <button
                   type="button"
                   onClick={() => setTempSettings({ ...tempSettings, storeOpen: false })}
-                  className={`flex-1 py-2 rounded-xl font-bold border transition-all ${
+                  className={`flex-1 py-2 rounded-xl font-bold border transition-all cursor-pointer ${
                     !tempSettings.storeOpen
                       ? 'bg-rose-600 text-white border-rose-400 shadow-md'
                       : 'bg-slate-900 text-slate-400 border-blue-500/20'
@@ -828,18 +827,28 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
 
             <div>
               <label className="block text-slate-300 font-bold mb-1">
-                Nomor Akun DANA (Bisa diisi sekarang atau nanti)
+                Nomor Akun DANA Toko (0831-5092-1412)
               </label>
               <input
                 type="text"
                 value={tempSettings.danaNumber}
                 onChange={(e) => setTempSettings({ ...tempSettings, danaNumber: e.target.value })}
-                placeholder="Contoh: 081234567890"
+                placeholder="Contoh: 0831-5092-1412"
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-blue-500/30 text-white outline-none focus:border-cyan-400"
               />
-              <span className="text-[11px] text-slate-400 mt-0.5 block">
-                Jika dikosongkan, user akan diarahkan untuk menggunakan QRIS.
-              </span>
+            </div>
+
+            <div>
+              <label className="block text-slate-300 font-bold mb-1">
+                Nama Pemilik Akun DANA
+              </label>
+              <input
+                type="text"
+                value={tempSettings.danaName || 'TEDDY TRI PRATAMA'}
+                onChange={(e) => setTempSettings({ ...tempSettings, danaName: e.target.value })}
+                placeholder="TEDDY TRI PRATAMA"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-blue-500/30 text-white outline-none focus:border-cyan-400"
+              />
             </div>
 
             <div>
@@ -980,13 +989,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
               <div className="flex items-center gap-3 pt-2">
                 <button
                   onClick={() => setConfirmingDeposit(null)}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 border border-blue-500/20 text-xs font-semibold text-slate-300 hover:text-white"
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 border border-blue-500/20 text-xs font-semibold text-slate-300 hover:text-white cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   onClick={handleConfirmDepositAction}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-xs font-bold text-white shadow-lg shadow-emerald-600/30"
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-xs font-bold text-white shadow-lg shadow-emerald-600/30 cursor-pointer"
                 >
                   Konfirmasi Deposit
                 </button>
@@ -1033,13 +1042,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
               <div className="flex items-center gap-3 pt-2">
                 <button
                   onClick={() => setRejectingDeposit(null)}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 border border-blue-500/20 text-xs font-semibold text-slate-300 hover:text-white"
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 border border-blue-500/20 text-xs font-semibold text-slate-300 hover:text-white cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   onClick={handleRejectDepositAction}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white shadow-lg shadow-rose-600/30"
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white shadow-lg shadow-rose-600/30 cursor-pointer"
                 >
                   Tolak Deposit
                 </button>
@@ -1066,7 +1075,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
                 </div>
                 <button
                   onClick={() => setTargetUser(null)}
-                  className="text-xs text-slate-400 hover:text-white"
+                  className="text-xs text-slate-400 hover:text-white cursor-pointer"
                 >
                   Tutup
                 </button>
@@ -1091,7 +1100,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
                         key={btn.id}
                         type="button"
                         onClick={() => setBalanceAdjustType(btn.id as any)}
-                        className={`py-2 px-2 rounded-xl font-bold text-center border transition-all ${
+                        className={`py-2 px-2 rounded-xl font-bold text-center border transition-all cursor-pointer ${
                           balanceAdjustType === btn.id
                             ? 'bg-blue-600 text-white border-cyan-400 shadow-md'
                             : 'bg-slate-900 text-slate-400 border-blue-500/20'
@@ -1146,14 +1155,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToStore, onToast }
                   <button
                     type="button"
                     onClick={() => setTargetUser(null)}
-                    className="flex-1 py-2.5 rounded-xl bg-slate-900 border border-blue-500/20 font-semibold text-slate-300 hover:text-white"
+                    className="flex-1 py-2.5 rounded-xl bg-slate-900 border border-blue-500/20 font-semibold text-slate-300 hover:text-white cursor-pointer"
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
                     disabled={submittingBalance || balanceAmount < 0}
-                    className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 font-bold text-white shadow-lg shadow-blue-600/30 disabled:opacity-50"
+                    className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 font-bold text-white shadow-lg shadow-blue-600/30 disabled:opacity-50 cursor-pointer"
                   >
                     {submittingBalance ? 'Menyimpan...' : 'Terapkan Perubahan'}
                   </button>
