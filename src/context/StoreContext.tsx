@@ -278,7 +278,18 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       body: JSON.stringify({ total: quantity }),
     });
 
-    const result = await response.json();
+    // Read as text first so an HTML/plain-text error from Vercel never
+    // crashes the UI with: Unexpected token ... is not valid JSON.
+    const responseText = await response.text();
+    let result: any;
+
+    try {
+      result = responseText ? JSON.parse(responseText) : {};
+    } catch {
+      throw new Error(
+        `Server API mengembalikan response yang bukan JSON (HTTP ${response.status}).`
+      );
+    }
 
     if (!response.ok || !result.success) {
       const errMsg = result.message || 'Gagal memproses pesanan ke server Alight Motion';
