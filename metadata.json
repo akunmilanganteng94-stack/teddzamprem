@@ -1,0 +1,6 @@
+{
+  "name": "TEDDZ AMPREM - Alight Motion Premium Store",
+  "description": "Toko Alight Motion Premium resmi, cepat, aman, dan terpercaya.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

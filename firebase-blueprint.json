@@ -1,0 +1,130 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role, balance, and account status",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "format": "email" },
+        "balance": { "type": "number" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "status": { "type": "string", "enum": ["active", "suspended"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "name", "email", "balance", "role", "status", "createdAt"]
+    },
+    "Deposit": {
+      "title": "Deposit",
+      "description": "User balance deposit request via QRIS or DANA",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "userName": { "type": "string" },
+        "amount": { "type": "number" },
+        "senderName": { "type": "string", "maxLength": 100 },
+        "method": { "type": "string", "enum": ["QRIS", "DANA"] },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"] },
+        "createdAt": { "type": "string" },
+        "processedAt": { "type": "string" },
+        "processedBy": { "type": "string" }
+      },
+      "required": ["userId", "amount", "senderName", "method", "status", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Alight Motion account bulk order record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "quantity": { "type": "number" },
+        "pricePerAccount": { "type": "number" },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["PROCESSING", "SUCCESS", "FAILED"] },
+        "apiResponse": { "type": "object" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "quantity", "pricePerAccount", "total", "status", "createdAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Financial ledger of deposits and orders",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["DEPOSIT", "ORDER", "ADMIN_ADJUST"] },
+        "amount": { "type": "number" },
+        "balanceBefore": { "type": "number" },
+        "balanceAfter": { "type": "number" },
+        "referenceId": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "type", "amount", "balanceBefore", "balanceAfter", "createdAt"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Global store settings, AM pricing, status, payment numbers",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string" },
+        "pricePerAccount": { "type": "number" },
+        "storeOpen": { "type": "boolean" },
+        "danaNumber": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "qrisUrl": { "type": "string" },
+        "minDeposit": { "type": "number" }
+      },
+      "required": ["storeName", "pricePerAccount", "storeOpen", "whatsapp", "qrisUrl"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Admin action and balance adjustment audit log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "adminId": { "type": "string" },
+        "adminEmail": { "type": "string" },
+        "action": { "type": "string" },
+        "targetUserId": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string" },
+        "reason": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["adminId", "action", "targetUserId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profiles and balances"
+    },
+    "/deposits/{depositId}": {
+      "schema": "Deposit",
+      "description": "Deposit requests from users"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Order history for AM Premium accounts"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Ledger transactions for users"
+    },
+    "/settings/{settingDoc}": {
+      "schema": "StoreSettings",
+      "description": "Store configuration document"
+    },
+    "/auditLogs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Administrative audit trail"
+    }
+  }
+}
