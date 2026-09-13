@@ -31,6 +31,16 @@ export interface DepositRecord {
 
 export type OrderStatus = 'PROCESSING' | 'SUCCESS' | 'FAILED';
 
+export interface ParsedAccount {
+  id: string;
+  email: string;
+  password?: string;
+  accessLink?: string;
+  raw?: string;
+  domain?: string;
+  gmailUrl?: string;
+}
+
 export interface OrderRecord {
   id: string;
   userId: string;
@@ -42,6 +52,7 @@ export interface OrderRecord {
   status: OrderStatus;
   apiResponse?: any;
   accounts?: string[];
+  parsedAccounts?: ParsedAccount[];
   createdAt: string;
 }
 
@@ -64,6 +75,7 @@ export interface StoreSettings {
   pricePerAccount: number;
   storeOpen: boolean;
   danaNumber: string;
+  danaName?: string;
   whatsapp: string;
   qrisUrl: string;
   minDeposit: number;
