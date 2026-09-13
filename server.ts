@@ -14,10 +14,11 @@ async function startServer() {
 
   // Health check
   app.get("/api/health", (_req, res) => {
-    res.json({ status: "ok", app: "TEDDZA MPREM" });
+    res.json({ status: "ok", app: "TEDDZ AMPREM" });
   });
 
   // Proxy API for Alight Motion bulk orders
+  // curl -X POST "https://am.dapjisync.my.id/api/bulk" -H "Content-Type: application/json" -H "X-API-Key: FREE" -d '{"total": 5}'
   app.post("/api/order-am", async (req, res) => {
     try {
       const { total } = req.body;
@@ -31,7 +32,7 @@ async function startServer() {
       }
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 20000);
+      const timeoutId = setTimeout(() => controller.abort(), 25000);
 
       try {
         const apiResponse = await fetch("https://am.dapjisync.my.id/api/bulk", {
@@ -109,7 +110,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`TEDDZA MPREM server running on http://0.0.0.0:${PORT}`);
+    console.log(`TEDDZ AMPREM server running on http://0.0.0.0:${PORT}`);
   });
 }
 
