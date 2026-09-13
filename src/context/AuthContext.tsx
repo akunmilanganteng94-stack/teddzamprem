@@ -24,7 +24,10 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const ADMIN_EMAILS = ['apriliansyahazril10@gmail.com'];
+const ADMIN_EMAILS = [
+  'apriliansyahazril10@gmail.com',
+  'apriliazril67@gmail.com',
+];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -36,11 +39,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-
       if (currentUser) {
         // Fetch or listen to user profile in Firestore
         const userRef = doc(db, 'users', currentUser.uid);
-
         unsubscribeDoc = onSnapshot(
           userRef,
           async (snapshot) => {
@@ -120,7 +121,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const registerWithEmail = async (name: string, email: string, pass: string) => {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(cred.user, { displayName: name });
-
     const isBootstrappedAdmin = ADMIN_EMAILS.includes(email.toLowerCase());
     const initialProfile: UserProfile = {
       uid: cred.user.uid,
@@ -131,7 +131,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       status: 'active',
       createdAt: new Date().toISOString(),
     };
-
     try {
       await setDoc(doc(db, 'users', cred.user.uid), initialProfile);
       setUserProfile(initialProfile);
