@@ -63,15 +63,20 @@ export function parseAccountString(str: string, index: number = 0): ParsedAccoun
   const domain = email.split('@')[1]?.toLowerCase() || '';
   const gmailUrl = getGmailAccessUrl(email);
 
-  return {
+  const account: ParsedAccount = {
     id: `acc-${index}-${email}`,
     email,
-    password: password || undefined,
     accessLink: gmailUrl,
     raw: trimmed,
     domain,
     gmailUrl,
   };
+
+  // Firestore rejects explicit `undefined` values. Only add optional
+  // password when the API actually returned one.
+  if (password) account.password = password;
+
+  return account;
 }
 
 /**
@@ -136,15 +141,16 @@ export function extractAccountsFromOrder(order: Partial<OrderRecord>): ParsedAcc
             if (email) {
               const cleanEmail = String(email).trim();
               const finalAccessLink = accessLink ? String(accessLink).trim() : getGmailAccessUrl(cleanEmail);
-              results.push({
+              const parsedAccount: ParsedAccount = {
                 id: `api-acc-${idx}-${cleanEmail}`,
                 email: cleanEmail,
-                password: password ? String(password).trim() : undefined,
                 accessLink: finalAccessLink,
                 raw: JSON.stringify(item),
                 domain: cleanEmail.split('@')[1]?.toLowerCase() || '',
                 gmailUrl: finalAccessLink,
-              });
+              };
+              if (password) parsedAccount.password = String(password).trim();
+              results.push(parsedAccount);
             }
           }
         });
