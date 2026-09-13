@@ -21,11 +21,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const { user, userProfile, isAdmin } = useAuth();
   const { settings } = useStore();
-
   const balance = userProfile?.balance ?? 0;
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#060a17]/85 border-b border-blue-500/20">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#060a17]/90 border-b border-blue-500/20">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Brand Logo & Title */}
         <div
@@ -45,9 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-extrabold text-base md:text-lg tracking-wider text-white">
-                {settings.storeName && !settings.storeName.includes('TEDDZA') && !settings.storeName.includes('TEDZZ')
-                  ? settings.storeName
-                  : 'TEDDZ AMPREM'}
+                {settings.storeName || 'TEDDZ AMPREM'}
               </h1>
               <span className="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]" />
             </div>
@@ -71,7 +68,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     currentTab === item.id
                       ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
                       : 'text-slate-400 hover:text-slate-100 hover:bg-white/5'
@@ -94,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {isAdmin && (
             <button
               onClick={() => onToggleAdminView(!isAdminView)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
                 isAdminView
                   ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
                   : 'bg-blue-950/60 text-cyan-300 border-cyan-500/30 hover:bg-blue-900/50'

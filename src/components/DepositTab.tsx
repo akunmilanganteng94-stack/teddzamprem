@@ -37,7 +37,6 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
   // Step 1: Nominal & Nama Pengguna
   // Step 2: Konfirmasi rincian & Pilih DANA / QRIS & Tombol "Saya Sudah Bayar"
   const [step, setStep] = useState<1 | 2>(1);
-
   const [amount, setAmount] = useState<number>(5000);
   const [senderName, setSenderName] = useState<string>(userProfile?.name || '');
   const [method, setMethod] = useState<PaymentMethod>('QRIS');
@@ -50,11 +49,15 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
   const qrisUrl =
     settings.qrisUrl ||
     'https://cdn.phototourl.com/free/2026-09-13-75d33bf7-921e-40be-8652-2fe713cf94ef.jpg';
+  const danaNumber = settings.danaNumber || '0831-5092-1412';
+  const danaName = settings.danaName || 'TEDDY TRI PRATAMA';
 
   const quickAmounts = [1000, 2000, 5000, 10000, 25000, 50000, 100000];
 
   const handleCopy = (text: string, type: string) => {
-    navigator.clipboard.writeText(text);
+    // Strip dashes for clean number copy if it's phone number
+    const toCopy = type === 'Nomor DANA' ? text.replace(/[^0-9]/g, '') : text;
+    navigator.clipboard.writeText(toCopy);
     setCopiedType(type);
     onToast(`${type} disalin ke clipboard!`, 'info');
     setTimeout(() => setCopiedType(null), 2000);
@@ -75,7 +78,6 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
       onToast('Nama pengguna / nama pengirim wajib diisi', 'error');
       return;
     }
-
     setStep(2);
   };
 
@@ -144,7 +146,7 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
         <button
           type="button"
           onClick={() => setShowGuide(!showGuide)}
-          className="w-full p-4 flex items-center justify-between text-left hover:bg-blue-950/40 transition-colors"
+          className="w-full p-4 flex items-center justify-between text-left hover:bg-blue-950/40 transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-cyan-400">
@@ -170,7 +172,6 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
                 <strong className="text-white">Masukkan Nominal:</strong> Tentukan jumlah saldo yang ingin Anda isi (minimal {formatRupiah(minDeposit)}).
               </div>
             </div>
-
             <div className="flex items-start gap-3 p-2.5 rounded-xl bg-blue-950/30 border border-blue-500/15">
               <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
                 2
@@ -179,31 +180,28 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
                 <strong className="text-white">Masukkan Nama Pengguna:</strong> Isi nama akun e-wallet/bank Anda agar admin dapat mencocokkan pembayaran.
               </div>
             </div>
-
             <div className="flex items-start gap-3 p-2.5 rounded-xl bg-blue-950/30 border border-blue-500/15">
               <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
                 3
               </span>
               <div>
-                <strong className="text-white">Konfirmasi Rincian:</strong> Tekan tombol 'Konfirmasi' untuk memeriksa detail nominal dan melanjutkan ke metode pembayaran.
+                <strong className="text-white">Konfirmasi Rincian:</strong> Tekan tombol 'Konfirmasi Rincian' untuk memeriksa detail nominal dan melanjutkan ke metode pembayaran.
               </div>
             </div>
-
             <div className="flex items-start gap-3 p-2.5 rounded-xl bg-blue-950/30 border border-blue-500/15">
               <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
                 4
               </span>
               <div>
-                <strong className="text-white">Pilih DANA / QRIS & Transfer:</strong> Scan kode QRIS atau transfer ke nomor DANA yang tertera dengan nominal tepat.
+                <strong className="text-white">Pilih DANA / QRIS & Transfer:</strong> Scan kode QRIS atau transfer ke nomor DANA <strong>{danaNumber} ({danaName})</strong> dengan nominal tepat.
               </div>
             </div>
-
             <div className="flex items-start gap-3 p-2.5 rounded-xl bg-blue-950/30 border border-blue-500/15">
               <span className="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
                 5
               </span>
               <div>
-                <strong className="text-white">Konfirmasi Sudah Bayar:</strong> Tekan tombol 'Saya Sudah Bayar'. Admin akan segera memverifikasi dan saldo langsung masuk ke akun Anda!
+                <strong className="text-white">Konfirmasi Sudah Bayar:</strong> Tekan tombol 'Konfirmasi Sudah Bayar'. Admin akan segera memverifikasi dan saldo langsung masuk ke akun Anda!
               </div>
             </div>
           </div>
@@ -250,14 +248,12 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
             Nominal & Nama
           </span>
         </div>
-
         <div className="h-[2px] flex-1 mx-3 bg-blue-900/60 relative">
           <div
             className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all duration-300"
             style={{ width: step === 1 ? '50%' : '100%' }}
           />
         </div>
-
         <div className="flex items-center gap-2">
           <div
             className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
@@ -290,7 +286,6 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
                 Minimal {formatRupiah(minDeposit)}
               </span>
             </div>
-
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-blue-400 text-sm">
                 Rp
@@ -338,7 +333,7 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
                 required
                 value={senderName}
                 onChange={(e) => setSenderName(e.target.value)}
-                placeholder="Contoh: Muhammad Azril / Nama Akun Anda"
+                placeholder="Contoh: Muhammad Azril / Nama Rekening Anda"
                 className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-blue-500/30 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 text-sm font-medium text-white outline-none transition-all placeholder-slate-500"
               />
             </div>
@@ -402,7 +397,6 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
                 <QrCode className="w-5 h-5" />
                 <span>QRIS</span>
               </button>
-
               <button
                 type="button"
                 onClick={() => setMethod('DANA')}
@@ -440,36 +434,55 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
                 </p>
               </div>
             ) : (
+              /* DANA Account Details Display */
               <div className="space-y-3">
-                <div className="p-4 rounded-xl bg-blue-950/60 border border-blue-500/30">
-                  <span className="text-[11px] text-slate-400 block mb-1">Nomor Akun DANA Toko:</span>
-                  {settings.danaNumber ? (
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-lg font-bold text-white tracking-wider">
-                        {settings.danaNumber}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => handleCopy(settings.danaNumber, 'Nomor DANA')}
-                        className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-all shadow-md shadow-blue-600/30"
-                      >
-                        {copiedType === 'Nomor DANA' ? (
-                          <>
-                            <Check className="w-3.5 h-3.5 text-cyan-300" /> Tersalin
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-3.5 h-3.5" /> Salin Nomor DANA
-                          </>
-                        )}
-                      </button>
+                <div className="p-4 rounded-xl bg-blue-950/70 border border-blue-500/30 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] text-cyan-300 font-semibold uppercase tracking-wider">
+                      Akun DANA Pembayaran Toko:
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md bg-blue-900/80 text-white text-[10px] font-bold">
+                      DANA
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <div>
+                      <div className="font-mono text-lg sm:text-xl font-black text-white tracking-wider">
+                        {danaNumber}
+                      </div>
+                      <div className="text-xs font-bold text-cyan-300 mt-0.5">
+                        a.n. {danaName}
+                      </div>
                     </div>
-                  ) : (
-                    <div className="text-xs text-amber-300 flex items-center gap-1.5 py-1">
-                      <Info className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span>Nomor DANA sedang diset oleh admin. Silakan gunakan opsi QRIS.</span>
-                    </div>
-                  )}
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(danaNumber, 'Nomor DANA')}
+                      className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all shadow-md shadow-blue-600/30 active:scale-95"
+                    >
+                      {copiedType === 'Nomor DANA' ? (
+                        <>
+                          <Check className="w-4 h-4 text-cyan-300" />
+                          <span>Tersalin</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4" />
+                          <span>Salin No. DANA</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-blue-950/30 border border-blue-500/20 text-[11px] text-slate-300 space-y-1">
+                  <div className="flex items-center gap-1.5 font-semibold text-white">
+                    <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Petunjuk Transfer DANA:</span>
+                  </div>
+                  <p>
+                    Buka aplikasi DANA Anda &gt; Pilih menu <strong>Kirim</strong> &gt; Masukkan nomor <strong>{danaNumber}</strong> &gt; Masukkan nominal <strong>{formatRupiah(amount)}</strong> &gt; Pastikan penerima tertulis <strong>{danaName}</strong>.
+                  </p>
                 </div>
               </div>
             )}
@@ -561,7 +574,6 @@ export const DepositTab: React.FC<DepositTabProps> = ({ onOpenAuth, onToast }) =
                       Pengirim: {dep.senderName} • {formatDate(dep.createdAt)}
                     </span>
                   </div>
-
                   <div>
                     {isApproved && (
                       <span className="px-2.5 py-1 rounded-xl text-[11px] font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">

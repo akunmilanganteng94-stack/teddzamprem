@@ -80,7 +80,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-blue-950/50 transition-colors"
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-blue-950/50 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -91,7 +91,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="button"
               onClick={() => { setTab('login'); setError(null); }}
-              className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all ${
+              className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all cursor-pointer ${
                 tab === 'login'
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                   : 'text-slate-400 hover:text-white'
@@ -102,7 +102,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="button"
               onClick={() => { setTab('register'); setError(null); }}
-              className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all ${
+              className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all cursor-pointer ${
                 tab === 'register'
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                   : 'text-slate-400 hover:text-white'

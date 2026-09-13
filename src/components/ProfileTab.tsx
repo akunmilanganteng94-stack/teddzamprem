@@ -72,7 +72,6 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                 </div>
               )}
             </div>
-
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-bold text-white">
@@ -189,7 +188,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <MessageCircle className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="font-bold text-sm text-white">Need bantuan?</h4>
+            <h4 className="font-bold text-sm text-white">Butuh Bantuan?</h4>
             <p className="text-xs text-slate-400">
               Hubungi admin jika mengalami kendala order atau deposit.
             </p>
